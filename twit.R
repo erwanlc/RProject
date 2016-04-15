@@ -79,3 +79,13 @@ TDM <- TermDocumentMatrix(doc.corpus)
 m <- as.matrix(TDM)
 v <- sort(rowSums(m), decreasing=TRUE)  
 head(v, 15)
+
+# cooccurence
+TDMS <- removeSparseTerms(TDM, 0.95)
+dim(TDMS)
+hc <- hclust(dist(TDMS), method = "complete")
+plot(hc)
+
+# Pair of words with the highest coocurence frequency
+findAssocs(TDM, "act", 0.7)
+findAssocs(TDM, "anoth", 0.7)
