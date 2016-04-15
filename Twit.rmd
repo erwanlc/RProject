@@ -5,6 +5,20 @@ date: "14 avril 2016"
 output: html_document
 ---
 
+# **SUMMARY**  
+1. PREPARATION
+  * R Library 
+  * Request Twitter Authentication 
+  * Get a file with some Twit! 
+  * Save for later 
+  * Start tweet cleaning
+  
+2. ANALYSIS
+  * 15 most frequent words 
+  * cooccurence 
+  * Pair of words with the highest coocurence frequency
+
+
 # **PREPARATION**  
 
 ## R Library
@@ -47,14 +61,14 @@ We download a bunch of data, where we precise the keywords, the number of tweet 
 
 
 
-## Sauvegarde pour récupération plus tard
+## Save for later
 We save those tweets in a file to avoid downloading them again:
 ```{r}
 # save(my_tweets, file = "my_tweets.rda")
 # save(panama_tweets, file = "panama_tweets.rda")
 ```
 
-## Début du script d'analyse
+## Start tweet cleaning
 ```{r, message=FALSE, warning=FALSE}
 load("panama_tweets.rda")
 
@@ -116,6 +130,33 @@ doc.corpus <-tm_map(doc.corpus, stemDocument)
 These lines perform a cleaning on the tweets, indeed we only want the text from the tweets.    
 
 
+
+# **ANALYSIS**
+
+#15 most frequent words  
+
+```{r}
+TDM <- TermDocumentMatrix(doc.corpus)
+m <- as.matrix(TDM)
+v <- sort(rowSums(m), decreasing=TRUE)  
+head(v, 15)
+```
+
+## cooccurence  
+
+```{r}
+TDMS <- removeSparseTerms(TDM, 0.95)
+dim(TDMS)
+hc <- hclust(dist(TDMS), method = "complete")
+plot(hc)
+```
+
+## Pair of words with the highest coocurence frequency  
+
+```{r}
+findAssocs(TDM, "act", 0.7)
+findAssocs(TDM, "anoth", 0.7)
+```
 
 
 
