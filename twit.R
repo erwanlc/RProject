@@ -1,30 +1,8 @@
----
-title: "Sentiment&Twitter"
-author: "Erwan Anthony"
-date: "14 avril 2016"
-output: html_document
----
-
-# **PREPARATION**  
-
-## R Library
-
-We check for the missing packages, and to download them in that case:
-
-```{r, message=FALSE, warning=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(twitteR, ROAuth, sentiment, plyr, ggplot2, wordcloud, RColorBrewer, httpuv, RCurl, base64enc)
 
 options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
-```
 
-
-
-
-
-## Request Twitter Authentication
-We have to connect the twitter API to be able to perform request:
-```{r}
 api_key <- "YAA6aE4JXH68yCybtxtKI5kVE"
 
 api_secret <- "ePfHwTkqsTnQD4UTCDN7Sw9fMny83REndaP3EYVgGSTxnqUQT9"
@@ -34,35 +12,20 @@ access_token <- "3994554975-u5ZRfTnLLnLi8OzJEYHLvQ0yUBGWPZaefS9699x"
 access_token_secret <- "AXR2GUFUagyJofaf0Pesw9AHpj9Ty1tlNOMXCagTYf3cX"
 
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
-```
+
+#Récupération de deux jeux de données
+my_tweets = searchTwitter("Brussels", n=5000, lang="en")
+panama_tweets = searchTwitter("Panama", n=5000, lang="en")
+
+#Sauvegarde pour récupération plus tard
+save(my_tweets, file = "my_tweets.rda")
+save(panama_tweets, file = "panama_tweets.rda")
 
 
-## Get a file with some Twit!
-We download a bunch of data, where we precise the keywords, the number of tweet and the language:
-
-```{r}
-# my_tweets = searchTwitter("Brussels", n=5000, lang="en")
-# panama_tweets = searchTwitter("Panama", n=5000, lang="en")
-```
-
-
-
-## Sauvegarde pour récupération plus tard
-We save those tweets in a file to avoid downloading them again:
-```{r}
-# save(my_tweets, file = "my_tweets.rda")
-# save(panama_tweets, file = "panama_tweets.rda")
-```
-
-## Début du script d'analyse
-```{r, message=FALSE, warning=FALSE}
+#Début du script d'analyse sur les tweets du Panama
 load("panama_tweets.rda")
 
-```
-We load the panama tweets previously saved.    
-
-```{r}
-# Convert the tweet in text and in utf-8 format
+# Convert the tweets in utf-8 text
 my_txt = sapply(panama_tweets, function(x) x$getText())
 my_txt <- iconv(my_txt, to ="utf-8")
 my_txt <- (my_txt[!is.na(my_txt)])
@@ -95,13 +58,11 @@ try.error = function(x)
   # result
   return(y)
 }
-
 # lower case using try.error with sapply
 my_txt = sapply(my_txt, try.error)
 
 my_txt = my_txt[!is.na(my_txt)]
 names(my_txt) = NULL
-
 
 # we transform in corpus
 doc.vec <- VectorSource(my_txt)
@@ -112,11 +73,4 @@ doc.corpus <-tm_map(doc.corpus, removeWords, stopwords("english"))
 doc.corpus <-tm_map(doc.corpus, stripWhitespace)
 # stemming of the document
 doc.corpus <-tm_map(doc.corpus, stemDocument)
-```
-These lines perform a cleaning on the tweets, indeed we only want the text from the tweets.    
-
-
-
-
-
 
