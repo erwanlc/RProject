@@ -62,9 +62,11 @@ load("panama_tweets.rda")
 We load the tweets previously saved.    
 
 ```{r}
+# Convert the tweet in text and in utf-8 format
 my_txt = sapply(panama_tweets, function(x) x$getText())
 my_txt <- iconv(my_txt, to ="utf-8")
 my_txt <- (my_txt[!is.na(my_txt)])
+# remove RT
 my_txt = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", my_txt)
 # remove at people
 my_txt = gsub("@\\w+", "", my_txt)
@@ -102,9 +104,6 @@ names(my_txt) = NULL
 
 doc.vec <- VectorSource(my_txt)
 doc.corpus <- Corpus(doc.vec)
-#doc.corpus <-tm_map(doc.corpus, removePunctuation)
-#doc.corpus <-tm_map(doc.corpus, removeNumbers)
-#doc.corpus <-tm_map(doc.corpus, content_transformer(tolower))
 doc.corpus <-tm_map(doc.corpus, removeWords, stopwords("english"))
 doc.corpus <-tm_map(doc.corpus, stripWhitespace)
 doc.corpus <-tm_map(doc.corpus, stemDocument)
