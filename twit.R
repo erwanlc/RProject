@@ -74,3 +74,8 @@ doc.corpus <-tm_map(doc.corpus, stripWhitespace)
 # stemming of the document
 doc.corpus <-tm_map(doc.corpus, stemDocument)
 
+#15 most frequent words
+TDM <- TermDocumentMatrix(doc.corpus)
+m <- as.matrix(TDM)
+v <- sort(rowSums(m), decreasing=TRUE)  
+head(v, 15)
