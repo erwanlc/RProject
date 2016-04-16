@@ -76,7 +76,6 @@ doc.corpus <-tm_map(doc.corpus, stemDocument)
 
 #15 most frequent words
 TDM <- TermDocumentMatrix(doc.corpus)
-m <- as.matrix(TDM)
 v <- sort(rowSums(m), decreasing=TRUE)  
 head(v, 15)
 
@@ -87,5 +86,45 @@ hc <- hclust(dist(TDMS), method = "complete")
 plot(hc)
 
 # Pair of words with the highest coocurence frequency
-findAssocs(TDM, "act", 0.7)
-findAssocs(TDM, "anoth", 0.7)
+findAssocs(TDM, "act", 0.9)
+findAssocs(TDM, "anoth", 0.9)
+
+#sentiment analysis
+# classify emotion
+classe_emo = classify_emotion(my_txt, algorithm="bayes", prior=1.0)
+# get emotion best fit
+emotion = classe_emo[,7]
+emotion[is.na(emotion)] = "unknown"
+
+# classify polarity
+class_pol = classify_polarity(my_txt, algorithm="bayes")
+# get polarity best fit
+polarity = class_pol[,4]
+# data frame with results
+sent_df = data.frame(text=my_txt, emotion=emotion, polarity=polarity, stringsAsFactors=FALSE)
+# sort data frame
+sent_df = within(sent_df, emotion <- factor(emotion, levels=names(sort(table(emotion), decreasing=TRUE))))
+
+# Separate the text by emotions and visualize the words with a comparison cloud
+# separating text by emotion
+emos = levels(factor(sent_df$emotion))
+nemo = length(emos)
+emo.docs = rep("", nemo)
+for (i in 1:nemo)
+{
+  tmp = my_txt[emotion == emos[i]]
+  emo.docs[i] = paste(tmp, collapse=" ")
+}
+
+# remove stopwords
+emo.docs = removeWords(emo.docs, stopwords("english"))
+
+corpus = Corpus(VectorSource(emo.docs))
+tdm = TermDocumentMatrix(corpus)
+tdm = as.matrix(tdm)
+colnames(tdm) = emos
+
+# comparison word cloud
+comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
+                 scale = c(3,.5), random.order = FALSE, title.size = 1.5)
+
