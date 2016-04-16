@@ -17,7 +17,7 @@ output: html_document
   * 15 most frequent words 
   * cooccurence 
   * Pair of words with the highest coocurence frequency
-
+  * sentiment analysis
 
 # **PREPARATION**  
 
@@ -155,6 +155,18 @@ plot(hc)
 ```{r}
 findAssocs(TDM, "act", 0.7)
 findAssocs(TDM, "anoth", 0.7)
+```
+
+## sentiment analysis
+```{r}
+# classify emotion
+classe_emo = classify_emotion(my_txt, algorithm="bayes", prior=1.0)
+```
+
+```{r}
+# get emotion best fit
+emotion = classe_emo[,7]
+emotion[is.na(emotion)] = "unknown"
 ```
 
 
