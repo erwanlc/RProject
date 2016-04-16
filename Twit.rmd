@@ -139,23 +139,22 @@ These lines perform a cleaning on the tweets, indeed we only want the text from 
 TDM <- TermDocumentMatrix(doc.corpus)
 m <- as.matrix(TDM)
 v <- sort(rowSums(m), decreasing=TRUE)  
-head(v, 15)
+print(head(v, 15))
 ```
 
 ## cooccurence  
 
 ```{r}
 TDMS <- removeSparseTerms(TDM, 0.95)
-dim(TDMS)
 hc <- hclust(dist(TDMS), method = "complete")
-plot(hc)
+print(plot(hc))
 ```
 
 ## Pair of words with the highest coocurence frequency  
 
 ```{r}
-findAssocs(TDM, "act", 0.7)
-findAssocs(TDM, "anoth", 0.7)
+print(findAssocs(TDM, "act", 0.7))
+print(findAssocs(TDM, "anoth", 0.7))
 ```
 
 
