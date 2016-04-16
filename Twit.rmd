@@ -18,6 +18,15 @@ output: html_document
   * cooccurence 
   * Pair of words with the highest coocurence frequency
   * sentiment analysis
+  * classify polarity
+  * get polarity best fit
+  * data frame with results
+  * sort data frame
+  
+3. EMOTIONS & VISUALIZATION
+  * separating text by emotion
+  * remove stopwords
+  * comparison word cloud
 
 # **PREPARATION**  
 
@@ -150,12 +159,18 @@ hc <- hclust(dist(TDMS), method = "complete")
 plot(hc)
 ```
 
+  
+The two words with the highest coocurence frequency are :  
+* **act**  
+* **wait**
+
 ## Pair of words with the highest coocurence frequency  
 
 ```{r}
 findAssocs(TDM, "act", 0.7)
 findAssocs(TDM, "anoth", 0.7)
 ```
+
 
 ## sentiment analysis
 ```{r}
@@ -171,4 +186,59 @@ emotion[is.na(emotion)] = "unknown"
 
 
 
+## classify polarity
+```{r}
+class_pol = classify_polarity(my_txt, algorithm="bayes")
+```
 
+
+## get polarity best fit
+```{r}
+polarity = class_pol[,4]
+```
+
+## data frame with results
+```{r}
+sent_df = data.frame(text=my_txt, emotion=emotion, polarity=polarity, stringsAsFactors=FALSE)
+```
+
+
+## sort data frame
+```{r}
+sent_df = within(sent_df, emotion <- factor(emotion, levels=names(sort(table(emotion), decreasing=TRUE))))
+```
+
+# **EMOTIONS & VISUALIZATION**
+
+Separate the text by emotions and visualize the words with a comparison cloud
+
+## separating text by emotion
+```{r}
+emos = levels(factor(sent_df$emotion))
+nemo = length(emos)
+emo.docs = rep("", nemo)
+for (i in 1:nemo)
+{
+  tmp = my_txt[emotion == emos[i]]
+  emo.docs[i] = paste(tmp, collapse=" ")
+}
+
+```
+
+## remove stopwords
+```{r}
+emo.docs = removeWords(emo.docs, stopwords("english"))
+
+corpus = Corpus(VectorSource(emo.docs))
+tdm = TermDocumentMatrix(corpus)
+tdm = as.matrix(tdm)
+colnames(tdm) = emos
+```
+
+
+## comparison word cloud
+```{r, message=FALSE, warning=FALSE}
+comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
+                 scale = c(3,.5), random.order = FALSE, title.size = 1.5)
+
+```
