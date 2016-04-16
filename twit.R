@@ -76,12 +76,12 @@ doc.corpus <-tm_map(doc.corpus, stemDocument)
 
 #15 most frequent words
 TDM <- TermDocumentMatrix(doc.corpus)
-v <- sort(rowSums(m), decreasing=TRUE)  
+m <- as.matrix(TDM)
+v <- sort(rowSums(m), decreasing=TRUE
 head(v, 15)
 
 # cooccurence
 TDMS <- removeSparseTerms(TDM, 0.95)
-dim(TDMS)
 hc <- hclust(dist(TDMS), method = "complete")
 plot(hc)
 
