@@ -136,6 +136,7 @@ doc.corpus <-tm_map(doc.corpus, stripWhitespace)
 # stemming of the document
 doc.corpus <-tm_map(doc.corpus, stemDocument)
 ```
+
 These lines perform a cleaning on the tweets, indeed we only want the text from the tweets.    
 
 
@@ -151,6 +152,8 @@ v <- sort(rowSums(m), decreasing=TRUE)
 head(v, 15)
 ```
 
+**"panama" is the most frequent word with 3623 occurences**
+
 ## cooccurence  
 
 ```{r}
@@ -161,15 +164,22 @@ plot(hc)
 
   
 The two words with the highest coocurence frequency are :  
-* **act**  
-* **wait**
+ **act**  
+ **wait**
 
 ## Pair of words with the highest coocurence frequency  
 
 ```{r}
 findAssocs(TDM, "act", 0.7)
+```
+
+**"act" has the best coocurence frequency with "wait"**
+
+```{r}
 findAssocs(TDM, "anoth", 0.7)
 ```
+
+**"anoth" has the best coocurence frequency with "act"**
 
 
 ## sentiment analysis
