@@ -253,12 +253,13 @@ comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
 
 ```
 
-The 3 most frequent words in each category are:
-* anger: furious, opponents and praised 
-* joy: main, resigncameron and charge 
-* fear: terrible, firms, digital 
-* sadness: get, shame, guilty 
-* disgust: hide,plumage, mour
-* surprise: top, wonder, byon
+The 3 most frequent words in each category are:  
+* anger: furious, opponents and praised  
+* joy: main, resigncameron and charge  
+* fear: terrible, firms, digital  
+* sadness: get, shame, guilty  
+* disgust: hide,plumage, mour  
+* surprise: top, wonder, byon  
+
   
 We can see that almost all the most frequent words are not in the sentiment graph. They were mostly categorized as unknown.
