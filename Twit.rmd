@@ -182,7 +182,10 @@ findAssocs(TDM, "anoth", 0.7)
 **"anoth" has the best coocurence frequency with "act"**
 
 
-## sentiment analysis
+# **EMOTIONS & VISUALIZATION**
+Separate the text by emotions and visualize the words with a comparison cloud
+
+## classify emotions
 ```{r}
 # classify emotion
 classe_emo = classify_emotion(my_txt, algorithm="bayes", prior=1.0)
@@ -218,9 +221,6 @@ sent_df = data.frame(text=my_txt, emotion=emotion, polarity=polarity, stringsAsF
 sent_df = within(sent_df, emotion <- factor(emotion, levels=names(sort(table(emotion), decreasing=TRUE))))
 ```
 
-# **EMOTIONS & VISUALIZATION**
-
-Separate the text by emotions and visualize the words with a comparison cloud
 
 ## separating text by emotion
 ```{r}
@@ -246,9 +246,19 @@ colnames(tdm) = emos
 ```
 
 
-## comparison word cloud
+## World cloud representation
 ```{r, message=FALSE, warning=FALSE}
 comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
                  scale = c(3,.5), random.order = FALSE, title.size = 1.5)
 
 ```
+
+The 3 most frequent words in each category are:
+* anger: furious, opponents and praised 
+* joy: main, resigncameron and charge 
+* fear: terrible, firms, digital 
+* sadness: get, shame, guilty 
+* disgust: hide,plumage, mour
+* surprise: top, wonder, byon
+  
+We can see that almost all the most frequent words are not in the sentiment graph. They were mostly categorized as unknown.
